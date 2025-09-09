@@ -1,16 +1,84 @@
-<!-- modify this form HTML and place wherever you want your form -->
-<form
-  action="https://formspree.io/f/xeolnogv"
-  method="POST"
->
-  <label>
-    Your email:
-    <input type="email" name="email">
-  </label>
-  <label>
-    Your message:
-    <textarea name="message"></textarea>
-  </label>
-  <!-- your other form fields go here -->
-  <button type="submit">Send</button>
-</form>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formspreeサンプル</title>
+  <meta name="description" content=>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+  <main class="container">
+    <h1>お問い合わせ</h1>
+    <p>＊は必須項目です。</p>
+    
+    <form id="contact"
+    onsubmit="event.preventDefault(); send();"
+    novalidate
+    aria-labelledby="form-title">
+    
+    <fieldset>
+      <legend id="form-title">お問い合わせフォーム</legend>
+      
+      <label for="name">名前 <abbr title="必須">*</abbr></label>
+      <input id="name"
+      name="name"
+      type="text"
+      required
+      autocomplete="name"
+      inputmode="text"
+      maxlength="80"
+      placeholder="山田 太郎">
+      
+      <label for="email">メールアドレス <abbr title="必須">*</abbr></label>
+      <input id="email"
+      name="email"
+      type="email"
+      required
+      autocomplete="email"
+      inputmode="email"
+      maxlength="120"
+      placeholder="taro@example.com">
+      
+      <label for="message">メッセージ <abbr title="必須">*</abbr></label>
+      <textarea id="message"
+      name="message"
+      required
+      rows="6"
+      maxlength="4000"
+      placeholder="お問い合わせ内容をご入力ください。"></textarea>
+      
+      <label>
+        <input type="checkbox" id="consent" name="consent" required>
+        プライバシーポリシーに同意します <abbr title="必須">*</abbr>
+      </label>
+      
+      <div class="grid">
+        <button type="submit" id="submitBtn">送信</button>
+        <button type="reset">リセット</button>
+      </div>
+      
+      <small id="status" role="status" aria-live="polite"></small>
+    </fieldset>
+    </form>
+  </main>
+
+  <script>
+    const ENDPOINT = "https://formspree.io/f/xeolnogv";
+    async function send(){
+      const f = document.getElementById('contact');
+      const data = new FormData(f);
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        body: data,
+        headers: { "Accept": "application/json" }
+      });
+      if (res.ok) {
+        location.href = "/thanks.html";
+      } else {
+        document.getElementById('status').textContent = "送信に失敗しました。時間をおいて再度お試しください。";
+      }
+    }
+  </script>
+</body>
+</html>
